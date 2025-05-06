@@ -1,0 +1,63 @@
+<!-- templates/emails/booking_confirmation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .confirmation-message {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .ticket-details {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Booking Confirmation</h1>
+        </div>
+        <div class="confirmation-message">
+            <h2>Congratulations!</h2>
+            <p>Your tickets are successfully booked for the event. Please find the details below.</p>
+        </div>
+        <div class="ticket-details">
+            <p><strong>Event:</strong> {{ event.name }}</p>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <p><strong>Venue:</strong> {{ event.venue }}</p>
+            <p><strong>Name:</strong> {{ booking.name }}</p>
+            <p><strong>Email:</strong> {{ booking.user_email }}</p>
+            <p><strong>Attendees:</strong> {{ booking.user_attendees }}</p>
+            <p><strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}</p>
+            <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for choosing Eventora. If you have any questions, please contact our support team.</p>
+        </div>
+    </div>
+</body>
+</html>

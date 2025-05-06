@@ -1,0 +1,441 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Event Map{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .event-popup h5 {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .event-popup p {
+            margin-bottom: 5px;
+        }
+        .event-popup .btn {
+            margin-top: 10px;
+        }
+        .map-controls {
+            margin-bottom: 15px;
+        }
+        #search-results {
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            background: white;
+            width: 100%;
+            z-index: 1000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #search-results div {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        #search-results div:hover {
+            background-color: #f8f9fa;
+        }
+        .position-relative {
+            position: relative;
+        }
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h2>Event Map</h2>
+            <p>Find events around you on the interactive map</p>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="map-controls">
+                        <div class="row g-2">
+                            <div class="col-md-4 position-relative">
+                                <div class="input-group">
+                                    <input type="text" id="location-search" class="form-control" placeholder="Search location by name">
+                                    <button id="location-search-btn" class="btn btn-primary">Search</button>
+                                </div>
+                                <div id="search-results"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <button id="locate-me" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-geo-alt"></i> Find Events Near Me
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" id="search-radius" class="form-control" value="10" placeholder="Radius (km)">
+                                    <button id="search-radius-btn" class="btn btn-outline-secondary">Apply</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="show-all-events" class="btn btn-outline-primary w-100">Show All Events</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="map"></div>
+                    <div id="loading" class="loading-indicator">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Locating events...</p>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <div class="d-flex justify-content-end mt-3">
+                        <a href="{% url 'event_create' %}" class="btn btn-success">
+                            <i class="bi bi-plus"></i> Add New Event
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
+            const map = L.map('map').setView([20, 0], 2); // Default to world view
+            
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Markers object to keep track of events
+            const markers = {};
+            let allEvents = [];
+            let userLocationMarker = null;
+            let radiusCircle = null;
+            let currentUserLocation = null;
+            const loadingIndicator = document.getElementById('loading');
+            
+            // Function to load events
+            function loadEvents() {
+                fetch('{% url "events-json" %}')
+                    .then(response => response.json())
+                    .then(events => {
+                        // Store all events
+                        allEvents = events;
+                        
+                        // Display all events
+                        displayEventsWithGeocode(allEvents);
+                    })
+                    .catch(error => console.error('Error loading events:', error));
+            }
+            
+            // Function to display events on the map - geocodes locations on-the-fly
+            function displayEventsWithGeocode(events) {
+                // Show loading indicator
+                loadingIndicator.style.display = 'block';
+                
+                // Clear existing markers
+                for (const id in markers) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id];
+                }
+                
+                // Create bounds to fit all markers
+                const bounds = L.latLngBounds();
+                let processedCount = 0;
+                
+                // If no events, hide loading and return
+                if (events.length === 0) {
+                    loadingIndicator.style.display = 'none';
+                    return;
+                }
+                
+                // Add new markers - process one by one with delays to avoid rate limiting
+                function processNextEvent(index) {
+                    if (index >= events.length) {
+                        // All events processed
+                        loadingIndicator.style.display = 'none';
+                        
+                        // If we have markers, fit bounds
+                        if (Object.keys(markers).length > 0) {
+                            map.fitBounds(bounds.pad(0.1));
+                        }
+                        return;
+                    }
+                    
+                    const event = events[index];
+                    
+                    // Geocode the location name
+                    geocodeLocation(event.location).then(coords => {
+                        if (coords) {
+                            const marker = L.marker([coords.lat, coords.lon]).addTo(map);
+                            
+                            // Format date
+                            const startDate = new Date(event.start);
+                            const formattedDate = startDate.toLocaleDateString() + ' ' + 
+                                                 startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            // Create popup content
+                            const popupContent = `
+                                <div class="event-popup">
+                                    <h5>${event.title}</h5>
+                                    <p><i class="bi bi-geo-alt"></i> ${event.location}</p>
+                                    <p><i class="bi bi-calendar"></i> ${formattedDate}</p>
+                                    <a href="${event.url}" class="btn btn-sm btn-primary">View Details</a>
+                                </div>
+                            `;
+                            
+                            marker.bindPopup(popupContent);
+                            markers[event.id] = marker;
+                            
+                            // Extend bounds to include this marker
+                            bounds.extend([coords.lat, coords.lon]);
+                        }
+                        
+                        // Process next event with a small delay to avoid API rate limits
+                        setTimeout(() => {
+                            processNextEvent(index + 1);
+                        }, 200);
+                    }).catch(error => {
+                        console.error(`Error geocoding location ${event.location}:`, error);
+                        // Continue processing even if this one failed
+                        setTimeout(() => {
+                            processNextEvent(index + 1);
+                        }, 200);
+                    });
+                }
+                
+                // Start processing events
+                processNextEvent(0);
+            }
+            
+            // Function to geocode a location using Nominatim
+            function geocodeLocation(locationName) {
+                return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            return {
+                                lat: parseFloat(data[0].lat),
+                                lon: parseFloat(data[0].lon)
+                            };
+                        }
+                        return null;
+                    });
+            }
+            
+            // Calculate distance between two points in km (Haversine formula)
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Radius of the earth in km
+                const dLat = deg2rad(lat2 - lat1);
+                const dLon = deg2rad(lon2 - lon1);
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2); 
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                const distance = R * c; // Distance in km
+                return distance;
+            }
+            
+            function deg2rad(deg) {
+                return deg * (Math.PI/180);
+            }
+            
+            // Filter events by radius - will need to geocode each event location
+            async function filterEventsByRadius(lat, lng, radius) {
+                loadingIndicator.style.display = 'block';
+                
+                const filteredEvents = [];
+                const promises = [];
+                
+                // Create a promise for each event geocoding
+                for (const event of allEvents) {
+                    const promise = geocodeLocation(event.location).then(coords => {
+                        if (coords) {
+                            const distance = calculateDistance(
+                                lat, lng, 
+                                coords.lat, coords.lon
+                            );
+                            if (distance <= radius) {
+                                filteredEvents.push(event);
+                            }
+                        }
+                    }).catch(error => {
+                        console.error(`Error geocoding location ${event.location}:`, error);
+                    });
+                    
+                    promises.push(promise);
+                }
+                
+                // Wait for all geocoding to complete
+                await Promise.all(promises);
+                loadingIndicator.style.display = 'none';
+                return filteredEvents;
+            }
+            
+            // Update the map with user location and filtered events
+            async function updateUserLocation(lat, lng, radius) {
+                // Store current location
+                currentUserLocation = {lat, lng};
+                
+                // Remove old user marker and circle
+                if (userLocationMarker) map.removeLayer(userLocationMarker);
+                if (radiusCircle) map.removeLayer(radiusCircle);
+                
+                // Add a marker for current location
+                userLocationMarker = L.marker([lat, lng], {
+                    icon: L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                    })
+                }).addTo(map);
+                userLocationMarker.bindPopup('Your Location').openPopup();
+                
+                // Draw a circle for search radius
+                radiusCircle = L.circle([lat, lng], {
+                    radius: radius * 1000, // Convert km to meters
+                    color: 'blue',
+                    fillColor: '#3388ff',
+                    fillOpacity: 0.1
+                }).addTo(map);
+                
+                // Filter events by radius
+                const filteredEvents = await filterEventsByRadius(lat, lng, radius);
+                
+                // Display filtered events
+                displayEventsWithGeocode(filteredEvents);
+                
+                // Fit bounds to include the circle
+                map.fitBounds(radiusCircle.getBounds());
+            }
+            
+            // Function to search location using Nominatim API
+            function searchLocation(query) {
+                const searchResultsDiv = document.getElementById('search-results');
+                searchResultsDiv.innerHTML = '<div>Searching...</div>';
+                searchResultsDiv.style.display = 'block';
+                
+                // Using Nominatim for geocoding (OpenStreetMap's geocoding service)
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResultsDiv.innerHTML = '';
+                        
+                        if (data.length === 0) {
+                            searchResultsDiv.innerHTML = '<div>No results found</div>';
+                            return;
+                        }
+                        
+                        // Display up to 5 results
+                        data.slice(0, 5).forEach(place => {
+                            const resultDiv = document.createElement('div');
+                            resultDiv.textContent = place.display_name;
+                            resultDiv.addEventListener('click', () => {
+                                const lat = parseFloat(place.lat);
+                                const lng = parseFloat(place.lon);
+                                const radius = parseFloat(document.getElementById('search-radius').value) || 10;
+                                
+                                // Update map with selected location
+                                updateUserLocation(lat, lng, radius);
+                                
+                                // Hide search results
+                                searchResultsDiv.style.display = 'none';
+                                
+                                // Update search box
+                                document.getElementById('location-search').value = place.display_name;
+                            });
+                            searchResultsDiv.appendChild(resultDiv);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error searching for location:', error);
+                        searchResultsDiv.innerHTML = '<div>Error searching for location</div>';
+                    });
+            }
+            
+            // Load events on page load
+            loadEvents();
+            
+            // Location search button
+            document.getElementById('location-search-btn').addEventListener('click', function() {
+                const query = document.getElementById('location-search').value.trim();
+                if (query) {
+                    searchLocation(query);
+                }
+            });
+            
+            // Location search input (enter key)
+            document.getElementById('location-search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        searchLocation(query);
+                    }
+                }
+            });
+            
+            // Hide search results when clicking outside
+            document.addEventListener('click', function(e) {
+                const searchResults = document.getElementById('search-results');
+                const searchInput = document.getElementById('location-search');
+                
+                if (e.target !== searchInput && e.target !== searchResults) {
+                    searchResults.style.display = 'none';
+                }
+            });
+            
+            // Find events near me button
+            document.getElementById('locate-me').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+                            const radius = parseFloat(document.getElementById('search-radius').value) || 10;
+                            
+                            // Update map with user location
+                            updateUserLocation(lat, lng, radius);
+                        },
+                        error => {
+                            console.error('Error getting location:', error);
+                            alert('Unable to get your location. Please check your browser permissions.');
+                        }
+                    );
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
+            });
+            
+            // Search radius button
+            document.getElementById('search-radius-btn').addEventListener('click', function() {
+                if (currentUserLocation) {
+                    const radius = parseFloat(document.getElementById('search-radius').value) || 10;
+                    updateUserLocation(currentUserLocation.lat, currentUserLocation.lng, radius);
+                } else {
+                    alert('Please set a location first using "Find Events Near Me" or by searching for a location.');
+                }
+            });
+            
+            // Show all events button
+            document.getElementById('show-all-events').addEventListener('click', function() {
+                displayEventsWithGeocode(allEvents);
+            });
+        });
+    </script>
+{% endblock %}

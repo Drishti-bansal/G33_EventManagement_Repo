@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation - Eventora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fbff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .confirmation-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        
+        .confirmation-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .ticket-details {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        .ticket-details p {
+            margin-bottom: 10px;
+        }
+        
+        .ticket-details strong {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .btn-home {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #e63946;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        
+        .btn-home:hover {
+            background-color: #d62939;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-box">
+            <div class="success-icon">✓</div>
+            <h1 class="confirmation-title">Payment Successful!</h1>
+            
+            {% if email_sent %}
+            <p class="confirmation-message">Congratulations! Your tickets are booked for the event. A confirmation email has been sent to {{ booking.user_email }}.</p>
+            {% else %}
+            <p class="confirmation-message">Congratulations! Your tickets are booked for the event. We're preparing your confirmation email.</p>
+            {% endif %}
+            
+            <div class="ticket-details">
+                <p><strong>Event:</strong> {{ event.title }}</p>
+                <p><strong>Date:</strong> {{ event.date }}</p>
+                {% if event.venue %}
+                <p><strong>Venue:</strong> {{ event.venue }}</p>
+                {% endif %}
+                <p><strong>Name:</strong> {{ booking.name }}</p>
+                <p><strong>Email:</strong> {{ booking.user_email }}</p>
+                <p><strong>Attendees:</strong> {{ booking.user_attendees }}</p>
+                <p><strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}</p>
+                <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+            </div>
+            
+            <a href="{% url 'event_list' %}" class="btn-home">Back to Events</a>
+        </div>
+    </div>
+</body>
+</html>

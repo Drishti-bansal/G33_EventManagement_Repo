@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title_block %}Choose Role{% endblock %}
+
+{% block main_block %}
+<div class="text-center mt-5">
+    <h2 class="mb-4">Choose Your Role</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="background-color: var(--pastel-green);">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title mb-3">User</h3>
+                    <p class="card-text flex-grow-1 mb-4">Join events, track your registrations, and connect with organizers.</p>
+                    <a href="{{ url_for('login_page', role='user') }}" class="btn btn-primary mt-auto">Continue as User</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="background-color: var(--pastel-pink);">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title mb-3">Organizer</h3>
+                    <p class="card-text flex-grow-1 mb-4">Create and manage events, track attendees, and grow your community.</p>
+                    <a href="{{ url_for('login_page', role='organizer') }}" class="btn btn-primary mt-auto">Continue as Organizer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "events/base.html" %}  
+{% block title %}{{ event.title }}{% endblock %}  
+
+{% block content %} 
+<!-- Add Leaflet CSS directly in the content block -->
+<style>
+    #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<!-- Load Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            {% if event.image %}
+            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+            {% else %}
+            <div class="bg-light text-center py-5">
+                <span class="text-muted">No Image</span>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h1 class="card-title">{{ event.title }}</h1>
+                <p class="text-muted">
+                    <strong>Date:</strong> {{ event.date|date:"F j, Y, g:i a" }} <br>
+                    <strong>Location:</strong> {{ event.location }} <br>
+                    <strong>Organized by:</strong> {{ event.organizer.username }}
+                </p>
+                
+                <h5 class="mt-4">Description</h5>
+                <p class="card-text">{{ event.description|linebreaks }}</p>
+                
+                {% if event.tags.all %}
+                <div class="mt-4">
+                    <h5>Tags</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tag in event.tags.all %}
+                        <a href="{% url 'event_by_tag' tag.id %}" class="text-decoration-none">
+                            <span class="badge bg-secondary p-2">{{ tag.name }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent">
+                <!-- Book Now button - Added here -->
+                <a href="{% url 'booking' event.pk %}" class="btn btn-primary">Book Now</a>
+                {% include 'events/add_to_cart_button.html' %}
+        
+                <div class="btn-group ms-2">
+                    <a href="{% url 'event_edit' event.pk %}" class="btn btn-outline-primary">Edit</a>
+                    <a href="{% url 'event_delete' event.pk %}" class="btn btn-outline-danger">Delete</a>
+                </div>
+                <a href="{% url 'event_list' %}" class="btn btn-outline-secondary float-end">Back to Events</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Event Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Date:</strong> {{ event.date|date:"F j, Y" }}</p>
+                <p><strong>Time:</strong> {{ event.date|date:"g:i a" }}</p>
+                <p><strong>Location:</strong> {{ event.location }}</p>
+                
+                {% if event.category %}
+                <p>
+                    <strong>Category:</strong> 
+                    <a href="{% url 'event_by_category' event.category.id %}">{{ event.category.name }}</a>
+                </p>
+                {% endif %}
+                
+                <p><strong>Organized by:</strong> {{ event.organizer.username }}</p>
+                <p><strong>Created:</strong> {{ event.created_at|date:"F j, Y" }}</p>
+                <p><strong>Last updated:</strong> {{ event.updated_at|date:"F j, Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Event Location Map - Now at the bottom of the page -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Event Location</h5>
+            </div>
+            <div class="card-body">
+                <div id="map"></div>
+                <div class="mt-3">
+                    <strong>{{ event.location }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add map initialization script directly in the content -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hard-coded coordinates for demonstration
+        // In a real application, you would get these from your database
+        // Use a geocoding service to convert addresses to coordinates
+        const defaultLat = 40.7128; // New York
+        const defaultLng = -74.0060;
+        
+        // Initialize map
+        const map = L.map('map').setView([defaultLat, defaultLng], 13);
+        
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Add marker at the location
+        const marker = L.marker([defaultLat, defaultLng]).addTo(map);
+        marker.bindPopup("{{ event.location }}").openPopup();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,93 @@
+<!-- add_to_cart_button.html -->
+<form action="{% url 'add_to_cart' event.id %}" method="POST" class="add-to-cart-form">
+    {% csrf_token %}
+
+    <button type="submit" class="btn btn-primary add-to-cart-btn">
+        <i class="fas fa-shopping-cart"></i> Add to Cart
+    </button>
+    
+    <input type="hidden" name="next" value="event_detail">
+    <div class="quantity-control">
+        <label for="attendees">Number of Attendees:</label>
+        <div class="quantity-wrapper">
+            <button type="button" class="quantity-btn minus" onclick="decrementQuantity('attendees')">-</button>
+            <input type="number" id="attendees" name="attendees" value="1" min="1" class="quantity-input">
+            <button type="button" class="quantity-btn plus" onclick="incrementQuantity('attendees')">+</button>
+        </div>
+    </div>
+    <!-- <button type="submit" class="btn btn-primary add-to-cart-btn">
+        <i class="fas fa-shopping-cart"></i> Add to Cart
+    </button> -->
+</form>
+
+<style>
+    .add-to-cart-form {
+        margin-top: 20px;
+        width:30%;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .quantity-control label {
+        margin-right: 15px;
+        font-weight: 600;
+    }
+    
+    .quantity-wrapper {
+        display: flex;
+        align-items: center;
+    }
+    
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 50%;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .quantity-btn:hover {
+        background-color: #e0e0e0;
+    }
+    
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin: 0 8px;
+        padding: 5px;
+    }
+    
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+    }
+</style>
+
+<script>
+    function incrementQuantity(id) {
+        const input = document.getElementById(id);
+        input.value = parseInt(input.value) + 1;
+    }
+    
+    function decrementQuantity(id) {
+        const input = document.getElementById(id);
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+</script>

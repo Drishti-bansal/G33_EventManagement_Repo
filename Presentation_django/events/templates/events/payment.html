@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Eventora</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fbff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .payment-header {
+            margin-bottom: 30px;
+        }
+
+        .payment-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .payment-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .payment-details {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .payment-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e63946;
+            margin-bottom: 20px;
+        }
+
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .qr-instructions {
+            font-size: 16px;
+            color: #555;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .btn-confirm {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #e63946;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .btn-confirm:hover {
+            background-color: #d62939;
+            transform: translateY(-2px);
+        }
+        
+        .btn-confirm:active {
+            transform: translateY(0);
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0;
+            color: #e63946;
+        }
+
+        .booking-info {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .booking-info p {
+            margin-bottom: 8px;
+        }
+
+        .booking-info strong {
+            font-weight: 600;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="payment-header">
+            <h1 class="payment-title">Complete Your Payment</h1>
+            <p class="payment-subtitle">Your booking is reserved for <span id="countdown">10:00</span> minutes</p>
+        </div>
+
+        <div class="payment-details">
+            <div class="booking-info">
+                <p><strong>Event:</strong> {{ event.title }}</p>
+                <p><strong>Date:</strong> {{ event.date }}</p>
+                <p><strong>Name:</strong> {{ booking.name }}</p>
+                <p><strong>Email:</strong> {{ booking.user_email }}</p>
+                <p><strong>Attendees:</strong> {{ booking.user_attendees }}</p>
+                <p><strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}</p>
+            </div>
+
+            <div class="payment-amount">
+                Total Amount: ₹{{ total_amount }}
+            </div>
+
+            <div class="qr-container">
+                <div class="qr-code">
+                    <img src="{% static 'events/images/qr.png' %}" alt="Payment QR Code" width="230" height="230">
+                </div>
+                <div class="qr-instructions">
+                    Scan this QR code with your UPI app or banking app to complete the payment. After payment, click "Confirm Payment" below.
+                </div>
+            </div>
+
+            <form action="{% url 'confirm_payment' booking.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-confirm">Confirm Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer for payment expiration
+        function startCountdown() {
+            let timeLeft = 10 * 60; // 10 minutes in seconds
+            const countdownEl = document.getElementById('countdown');
+            
+            const countdownInterval = setInterval(function() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = "{% url 'payment_expired' %}";
+                }
+                
+                timeLeft--;
+            }, 1000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', startCountdown);
+    </script>
+</body>
+</html>

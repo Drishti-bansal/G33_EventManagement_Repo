@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Integrated Help Center</title>
+</head>
+<body>
+    <h1>Featured Articles (From Flask API)</h1>
+    <ul>
+        {% for article in featured_articles %}
+            <li>{{ article.title }}</li>
+        {% empty %}
+            <li>No featured articles available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

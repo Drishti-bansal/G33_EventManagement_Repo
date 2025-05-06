@@ -1,0 +1,367 @@
+{% extends 'events/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <section class="checkout-section">
+        <div class="section-header">
+            <h1 class="checkout-title">Booking</h1>
+            <p class="checkout-subtitle">Complete your bookings</p>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="checkout-container">
+            <div class="checkout-items">
+                <div class="checkout-header">
+                    <h3>Order Items</h3>
+                </div>
+                
+                {% for item in cart_items %}
+                <div class="checkout-item">
+                    <div class="item-image">
+                        {% if item.event.image %}
+                        <img src="{{ item.event.image.url }}" alt="{{ item.event.title }}">
+                        {% else %}
+                        <div class="no-image">No Image</div>
+                        {% endif %}
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-title">{{ item.event.title }}</h3>
+                        <p class="item-date">{{ item.event.date }}</p>
+                        <p class="item-location">{{ item.event.location }}</p>
+                        <p class="item-attendees">{{ item.attendees }} Attendee(s)</p>
+                    </div>
+                    <div class="item-price">
+                        <p class="price-per-ticket">₹{{ item.event.price }} per ticket</p>
+                        <p class="item-subtotal">Subtotal: <span>₹{{ item.get_price }}</span></p>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="checkout-note">
+                    <p><strong>Note:</strong> After proceeding, you'll need to select seats for each event separately.</p>
+                </div>
+            </div>
+            
+            <div class="checkout-summary">
+                <h3 class="summary-title">Order Summary</h3>
+                <div class="summary-row">
+                    <span>Events:</span>
+                    <span>{{ cart.get_item_count }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Total Attendees:</span>
+                    <span>{{ total_attendees }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Amount:</span>
+                    <span class="total-amount">₹{{ total_amount }}</span>
+                </div>
+                
+                <div class="user-info">
+                    <h4>Your Information</h4>
+                    <p><strong>Name:</strong> {{ request.user.profile.full_name|default:request.user.username }}</p>
+                    <p><strong>Email:</strong> {{ request.user.email }}</p>
+                    <p><strong>Phone:</strong> {% if request.user.profile.mobile_number %}{{ request.user.profile.mobile_number }}{% else %}Not provided{% endif %}</p>
+                </div>
+                
+                <form action="{% url 'process_cart_checkout' %}" method="POST" class="checkout-form">
+                    {% csrf_token %}
+                    <div class="payment-methods">
+                        <h4>Payment Method</h4>
+                        <div class="payment-option">
+                            <input type="radio" id="pay-later" name="payment_method" value="pay_later" checked>
+                            <label for="pay-later">Pay Later</label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="pay-online" name="payment_method" value="pay_online">
+                            <label for="pay-online">Pay Online</label>
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-actions">
+                        <a href="{% url 'cart_view' %}" class="btn btn-secondary">Back to Cart</a>
+                        <button type="submit" class="btn btn-primary">Complete Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .checkout-section {
+        padding: 40px 0;
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .checkout-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .checkout-subtitle {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .checkout-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+    
+    .checkout-items {
+        flex: 1 1 60%;
+    }
+    
+    .checkout-summary {
+        flex: 1 1 30%;
+        min-width: 300px;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        align-self: flex-start;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .checkout-header {
+        margin-bottom: 20px;
+    }
+    
+    .checkout-item {
+        display: flex;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .item-image {
+        width: 120px;
+        height: 120px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+    
+    .item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .no-image {
+        width: 100%;
+        height: 100%;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+    }
+    
+    .item-details {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .item-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .item-date, .item-location, .item-attendees {
+        margin-bottom: 5px;
+        color: #666;
+    }
+    
+    .item-price {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 150px;
+        text-align: right;
+    }
+    
+    .price-per-ticket {
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .item-subtotal {
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    .checkout-note {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #4285F4;
+        margin-top: 20px;
+    }
+    
+    .summary-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+    
+    .summary-row.total {
+        font-size: 22px;
+        font-weight: 700;
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+    }
+    
+    .total-amount {
+        color: #e63946;
+    }
+    
+    .user-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    
+    .user-info h4 {
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+    
+    .user-info p {
+        margin-bottom: 5px;
+    }
+    
+    .payment-methods {
+        margin-bottom: 25px;
+    }
+    
+    .payment-methods h4 {
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+    
+    .payment-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .payment-option input {
+        margin-right: 10px;
+    }
+    
+    .checkout-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .btn-primary {
+        background-color: #e63946;
+        color: white;
+        flex: 1;
+        margin-left: 10px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #d62939;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 992px) {
+        .checkout-container {
+            flex-direction: column;
+        }
+        
+        .checkout-summary {
+            width: 100%;
+            position: static;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .checkout-item {
+            flex-direction: column;
+        }
+        
+        .item-image {
+            width: 100%;
+            height: 200px;
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+        
+        .item-price {
+            width: 100%;
+            text-align: left;
+            margin-top: 15px;
+        }
+        
+        .checkout-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}

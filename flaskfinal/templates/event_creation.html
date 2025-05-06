@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Event</title>
+    <style>
+        :root {
+    --primary-pastel: #A8D8EA;    
+    --secondary-pastel: #ea8d88;  
+    --accent-pastel: 
+    #f1caca;     
+    --success-pastel: #DCEDC1;    
+    --text-dark: #4A4A4A;         
+    --text-light: #767676;       
+    --white: #FFFFFF;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #FFF5F5;
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--secondary-pastel);
+    border-radius: 2px;
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--accent-pastel);
+    border-radius: 10px;
+    transition: transform 0.2s;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 96%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 2px solid var(--primary-pastel);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: var(--white);
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--secondary-pastel);
+    box-shadow: 0 0 0 3px rgba(255, 170, 165, 0.2);
+}
+
+.submit-btn, .view-btn, .back-btn {
+    background-color: var(--primary-pastel);
+    color: var(--text-dark);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover, .view-btn:hover, .back-btn:hover {
+    background-color: var(--secondary-pastel);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.success-container {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--success-pastel);
+    border-radius: 15px;
+}
+
+.success-container h1 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.event-container {
+    background-color: var(--accent-pastel);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.event-image {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.event-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-details {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 2rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.event-details p {
+    margin: 0.8rem 0;
+    color: var(--text-light);
+}
+
+.event-details strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.description {
+    white-space: pre-line;
+    padding: 1rem;
+    background-color: var(--accent-pastel);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+#image-preview {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+#image-preview img {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+input[type="file"] {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px dashed var(--primary-pastel);
+    border-radius: 8px;
+    background-color: var(--white);
+    cursor: pointer;
+}
+
+input[type="file"]:hover {
+    border-color: var(--secondary-pastel);
+}
+
+.flash-message {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    text-align: center;
+    background-color: var(--success-pastel);
+    color: var(--text-dark);
+}
+
+.flash-message.error {
+    background-color: #FFD1D1;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .submit-btn, .view-btn, .back-btn {
+        width: 100%;
+    }
+    
+    .event-details {
+        padding: 1rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Event</h1>
+        <form action="{{ url_for('event_creation') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-section">
+                <label for="category">Event Category:</label>
+                <select name="category" id="category" required>
+                    <option value="">Select a category</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="title">Event Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="form-section">
+                <label for="image">Event Poster:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <div id="image-preview"></div>
+            </div>
+
+            <div class="form-section">
+                <label for="date">Event Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-section">
+                <label for="time">Event Time:</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+
+            <div class="form-section">
+                <label for="description">Event Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+
+
+
+            <a href="{{ url_for('dashboard') }}">
+            <button type="submit" class="submit-btn">Create Event</button>
+        </a>
+        </form>
+    </div>
+    <script >
+        document.getElementById('image').addEventListener('change', function(event) {
+    const preview = document.getElementById('image-preview');
+    preview.innerHTML = '';
+    
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    }
+});
+    </script>
+</body>
+</html>

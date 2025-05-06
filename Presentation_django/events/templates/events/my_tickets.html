@@ -1,0 +1,161 @@
+{% extends 'events/base.html' %}
+
+{% block title %}My Tickets{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">My Tickets</h1>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+                Upcoming Events ({{ upcoming_bookings|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">
+                Past Events ({{ past_bookings|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab" aria-controls="cancelled" aria-selected="false">
+                Cancelled Events ({{ cancelled_bookings|length }})
+            </button>
+        </li>
+    </ul>
+    
+    <!-- Tab Content -->
+    <div class="tab-content" id="myTabContent">
+        <!-- Upcoming Events -->
+        <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+            {% if upcoming_bookings %}
+                <div class="row">
+                    {% for booking in upcoming_bookings %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">{{ booking.event.title }}</h5>
+                                <span class="badge bg-success">{{ booking.booking_status }}</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <strong>Date & Time:</strong> {{ booking.event.date|date:"F j, Y, g:i a" }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Location:</strong> {{ booking.event.location }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Attendees:</strong> {{ booking.user_attendees }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Booking Date:</strong> {{ booking.booking_date|date:"F j, Y" }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Payment Status:</strong> 
+                                    <span class="badge bg-{% if booking.payment_status == 'PAID' %}success{% elif booking.payment_status == 'PENDING' %}warning{% else %}danger{% endif %}">
+                                        {{ booking.payment_status }}
+                                    </span>
+                                </div>
+                                {% if booking.can_cancel %}
+                                <div class="text-end">
+                                    <a href="{% url 'cancel_ticket' booking.id %}" class="btn btn-danger">Cancel Ticket</a>
+                                </div>
+                                {% else %}
+                                <div class="alert alert-info">
+                                    <small>Cancellation is only available up to 1 day before the event.</small>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">You don't have any upcoming events.</div>
+            {% endif %}
+        </div>
+        
+        <!-- Past Events -->
+        <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
+            {% if past_bookings %}
+                <div class="row">
+                    {% for booking in past_bookings %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">{{ booking.event.title }}</h5>
+                                <span class="badge bg-secondary">ATTENDED</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <strong>Date & Time:</strong> {{ booking.event.date|date:"F j, Y, g:i a" }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Location:</strong> {{ booking.event.location }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Attendees:</strong> {{ booking.user_attendees }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">You don't have any attended events.</div>
+            {% endif %}
+        </div>
+        
+        <!-- Cancelled Events -->
+        <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
+            {% if cancelled_bookings %}
+                <div class="row">
+                    {% for booking in cancelled_bookings %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">{{ booking.event.title }}</h5>
+                                <span class="badge bg-danger">CANCELLED</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <strong>Date & Time:</strong> {{ booking.event.date|date:"F j, Y, g:i a" }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Location:</strong> {{ booking.event.location }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Booking Date:</strong> {{ booking.booking_date|date:"F j, Y" }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Cancellation Date:</strong> {{ booking.updated_at|date:"F j, Y" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">You don't have any cancelled events.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

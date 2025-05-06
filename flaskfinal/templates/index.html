@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <title>EventHub - Discover & Create Amazing Events</title>
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+         <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+         <style>
+             :root {
+                 --primary-color: #7879ff;
+                 --secondary-color: #2d3436;
+                 --accent-color: #00b894;
+             }
+     
+             body {
+                 font-family: 'Segoe UI', sans-serif;
+                 
+             }
+     
+             .navbar {
+                 background-color: var(--primary-color);
+                 padding: 1rem;
+             }
+     
+             .navbar-brand {
+                 font-size: 1.5rem;
+                 font-weight: bold;
+             }
+             
+
+              .category-pill {
+                 background: white;
+                 border: 1px solid #ddd;
+                 padding: 0.5rem 1rem;
+                 border-radius: 25px;
+                 margin: 0.5rem;
+                 transition: all 0.3s;
+                 cursor: pointer;
+                 display: inline-flex;
+                 align-items: center;
+                 gap: 0.5rem;
+             }
+     
+             .category-pill:hover {
+                 background: var(--primary-color);
+                 color: white;
+                 transform: translateY(-2px);
+             }
+     
+             .event-card {
+                 border: none;
+                 border-radius: 15px;
+                 overflow: hidden;
+                 transition: transform 0.3s;
+                 margin-bottom: 1.5rem;
+             }
+     
+             .event-card:hover {
+                 transform: translateY(-5px);
+             }
+     
+             .event-img {
+                 height: 200px;
+                 object-fit: cover;
+             }
+     
+             .featured-tag {
+                 position: absolute;
+                 top: 1rem;
+                 right: 1rem;
+                 background: var(--accent-color);
+                 color: white;
+                 padding: 0.5rem 1rem;
+                 border-radius: 5px;
+             }
+     
+             .price-tag {
+                 position: absolute;
+                 bottom: 1rem;
+                 right: 1rem;
+                 background: rgba(0,0,0,0.8);
+                 color: white;
+                 padding: 0.5rem 1rem;
+                 border-radius: 5px;
+             }
+     
+             .trending-section {
+                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                 padding: 4rem 0;
+                 color: white;
+             }
+     
+             .footer {
+                 background: var(--secondary-color);
+                 color: white;
+                 padding: 3rem 0;
+             }
+     
+             .social-links a {
+                 color: white;
+                 margin: 0 1rem;
+                 font-size: 1.5rem;
+                 transition: color 0.3s;
+             }
+     
+             .social-links a:hover {
+                 color: var(--primary-color);
+             }
+     
+             .newsletter-form {
+                 background: rgba(255,255,255,0.1);
+                 padding: 2rem;
+                 border-radius: 10px;
+             }
+     
+             @media (max-width: 768px) {
+                 .hero {
+                     height: 60vh;
+                 }
+             }
+             .featured-events-container {
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .scroll-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            gap: 20px;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-btn:hover {
+            background: #d92f4f;
+        }
+
+        .scroll-btn.left {
+            left: 0;
+        }
+
+        .scroll-btn.right {
+            right: 0;
+        }
+
+        .event-card {
+            flex: 0 0 auto;
+            width: 300px;
+            margin: 0;
+        }
+    .carousel-inner img {
+    height: 600px; 
+    object-fit: cover; 
+    border-radius: 15px; 
+}
+        .slider-container {
+    overflow: hidden;
+    width: 100%;
+    background: #f8f9fa;
+    padding: 20px 0;
+}
+
+.slider {
+    display: flex;
+    gap: 20px;
+    width: calc(300px * 12); 
+    animation: slide 20s linear infinite;
+}
+
+.slide {
+    flex: 0 0 auto;
+    width: 300px; 
+    height: 200px; 
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.slider-container:hover .slider {
+    animation-play-state: paused;
+}
+.search-box {
+            background: white;
+            padding: 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+
+@keyframes slide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+body {
+            font-family: Arial, sans-serif;
+        }
+
+        
+    .carousel {
+    max-width: 100%;
+}
+
+.carousel-inner {
+    height: 500px; 
+}
+
+.carousel-item img {
+    height: 500px;
+    object-fit: cover; 
+    border-radius: 15px; 
+}
+         </style>
+     </head>
+     <body> 
+     
+       
+      <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+         <div class="container">
+             <a class="navbar-brand" href="#">
+                 <i class="fas fa-calendar-alt"></i> Eventora
+             </a>
+             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                 <span class="navbar-toggler-icon"></span>
+             </button>
+             <div class="collapse navbar-collapse" id="navbarNav">
+                 <ul class="navbar-nav ms-auto">
+                     
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{url_for('create_event')}}"><i class="fas fa-plus-circle"></i> Create Event</a></li>
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('find_events') }}">Find Events</a></li>
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('help') }}">Help Center</a></li>
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('about') }}">About Us</a></li>
+                    
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('contact') }}">Contact Us</a></li>
+                     <!-- <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('choose_role') }}">Sign up</a></li> -->
+                
+                     <li class="nav-item"><a class="nav-link btn btn-light text-dark ms-2" href="{{url_for('choose_role')}}"><i class="fas fa-user"></i> Login </a></li>
+                 </ul>
+             </div>
+         </div>
+     </nav>
+
+     
+     <div class="container d-flex justify-content-center mt-5">
+        <div id="carouselExampleIndicators" class="carousel slide w-100 h-50">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+
+
+            <div class="carousel-item">
+
+                <img src="https://img.freepik.com/premium-photo/free-photo-food-truck-city-festival-selective-focus_1041666-28178.jpg?semt=ais_hybrid" class="d-block w-100" alt="...">
+              </div>
+
+            <div class="carousel-item active">
+                <img src="https://images.stockcake.com/public/5/9/b/59bd9342-2b1c-4f8a-bdd1-9aa7991a73f9_large/cocktail-networking-event-stockcake.jpg" class="d-block w-100" alt="...">
+              </div>
+            
+            <div class="carousel-item">
+              <img src="https://media.istockphoto.com/id/1247853982/photo/cheering-crowd-with-hands-in-air-at-music-festival.jpg?s=612x612&w=0&k=20&c=rDVKf3hTryuVgUZUme9wuwfsegfJptAvVEKsDwppvJc=" class="d-block w-100" alt="...">
+            </div>
+            
+           
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      
+      
+
+
+
+
+    
+            
+
+ <section class="py-5">
+    <div class="container">
+        <h2 class="mb-4">Popular Categories</h2>
+        <div class="d-flex flex-wrap justify-content-center">
+            <a href="{{ url_for('music') }}" class="category-pill"><i class="fas fa-music"></i> Music</a>
+            <a href="{{ url_for('arts') }}" class="category-pill"><i class="fas fa-theater-masks"></i> Arts</a>
+            <a href="{{ url_for('food') }}" class="category-pill"><i class="fas fa-utensils"></i> Food & Drink</a>
+            <a href="{{ url_for('sports') }}" class="category-pill"><i class="fas fa-running"></i> Sports</a>
+            <a href="{{ url_for('tech') }}" class="category-pill"><i class="fas fa-laptop-code"></i> Technology</a>
+            <a href="{{ url_for('edu') }}" class="category-pill"><i class="fas fa-graduation-cap"></i> Education</a>
+            <a href="{{ url_for('business') }}" class="category-pill"><i class="fas fa-briefcase"></i> Business</a>
+            <a href="{{ url_for('lifestyle') }}" class="category-pill"><i class="fas fa-heart"></i> Lifestyle</a>
+        </div>
+    </div>
+    
+     </section>
+
+     <div class="slider-container">
+        <div class="slider">
+            <div class="slide"><img src="https://cdn-images-3.listennotes.com/podcasts/mazakast/hostel-stand-up-comedy-ft-VvCiLxJYP4s-MtOPGEnAHld.1400x1400.jpg" alt="Event 1"></div>
+            <div class="slide"><img src="https://cdn1.img.sputniknews.in/img/07e7/0a/07/4656900_489:0:2537:2048_1920x0_80_0_0_01bef0885bf01d34dea6f448c82a614b.jpg" alt="Event 2"></div>
+            <div class="slide"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFpnXZCFIRbzRNOXWJy2xpu_zjU0rM6lsdCQ&s" alt="Event 3"></div>
+            <div class="slide"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsBhn4VW0r6N9daJgGOnfWleQlbKXATT1tBQ&s" alt="Event 4"></div>
+            <div class="slide"><img src="https://img.freepik.com/premium-photo/free-photo-food-truck-city-festival-selective-focus_1041666-28178.jpg?semt=ais_hybrid" alt="Event 5"></div>
+            <div class="slide"><img src="https://static.toiimg.com/thumb/107526288/Healthy-travel.jpg?width=1200&height=900" alt="Event 6"></div>
+            <div class="slide"><img src="https://www.vancopayments.com/hs-fs/hubfs/Kids%20at%20Elementary%20School%20Event.jpg?width=488&height=325&name=Kids%20at%20Elementary%20School%20Event.jpg" alt="Event 1"></div>
+            <div class="slide"><img src="https://i.cdn.newsbytesapp.com/images/l63620230208152425.jpeg" alt="Event 2"></div>
+            <div class="slide"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0aXRoxl9rfm_m9uNO7mxjLRYOpJK5G5Hw5w&s" alt="Event 3"></div>
+        </div>
+    </div>
+    
+
+     <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-4">Featured Events</h2>
+            <div class="featured-events-container">
+                <button class="scroll-btn left" onclick="scrollLeft()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="scroll-wrapper">
+                    <div class="scroll-container">
+                        <div class="card event-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0C5QxoDe3V-9weum6Ltn9aKchfK8jaUyOZg&s" class="event-img" alt="Music Festival">
+                           
+                            <div class="price-tag">From $49</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Summer Music Festival 2025</h5>
+                                <p class="card-text"><i class="fas fa-calendar"></i> Mar 15, 2025</p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> Central Park, NY</p>
+                                <button class="btn btn-primary w-100">Get Tickets</button>
+                                
+                            </div>
+                        </div>
+
+                        <div class="card event-card">
+                            <img src="https://images.indianexpress.com/2018/07/football-reuters-m.jpg" class="event-img" alt="Sports Event">
+                            
+                            <div class="price-tag">From $75</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Championship Finals 2025</h5>
+                                <p class="card-text"><i class="fas fa-calendar"></i> Apr 20, 2025</p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> Madison Square Garden, NY</p>
+                                <button class="btn btn-primary w-100"
+                                >Get Tickets</button>
+                                
+                            </div>
+                        </div>
+
+                        <div class="card event-card">
+                            <img src="https://a.storyblok.com/f/188325/1920x1280/41e681c422/alexandre-pellaes-6vajp0pscx0-unsplash-1-1.jpg" class="event-img" alt="Tech Conference">
+                           
+                            <div class="price-tag">From $199</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Tech Innovation Summit</h5>
+                                <p class="card-text"><i class="fas fa-calendar"></i> May 5, 2025</p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> Silicon Valley, CA</p>
+                                <button class="btn btn-primary w-100">Get Tickets</button>
+                            </div>
+                        </div>
+
+                        <div class="card event-card">
+                            <img src="https://images.jdmagicbox.com/quickquotes/listicle/listicle_1686140315148_74ycs_1040x500.jpg" class="event-img" alt="Food Festival">
+                            
+                            <div class="price-tag">From $35</div>
+                            <div class="card-body">
+                                <h5 class="card-title">International Food Festival</h5>
+                                <p class="card-text"><i class="fas fa-calendar"></i> Jun 10, 2025</p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> Miami Beach, FL</p>
+                                <button class="btn btn-primary w-100">Get Tickets</button>
+                            </div>
+                        </div>
+
+                        <div class="card event-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEvgLGBBxX5MEtaq_TaX0QVUYytBpr4S1WKw&s" class="event-img" alt="Art Exhibition">
+                            
+                            <div class="price-tag">From $25</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Modern Art Exhibition</h5>
+                                <p class="card-text"><i class="fas fa-calendar"></i> Jul 1, 2025</p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> MOMA, NY</p>
+                                <button class="btn btn-primary w-100">Get Tickets</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn right" onclick="scrollRight()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+     
+     
+     <section class="trending-section">
+         <div class="container">
+             <h2 class="text-center mb-5">Trending This Week</h2>
+             <div class="row">
+                 
+             </div>
+         </div>
+     </section>
+    <div class="row">
+        <div class="col-md-3">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFDW5vyDUxqLsxLT-iVrdwbzApKjvjp31aSQ&s" class="img-fluid rounded">
+        </div>
+        <div class="col-md-3">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1CZzgPjINVJhxS_rma_l2_YQBRTlcHupKag&s" class="img-fluid rounded">
+        </div>
+        <div class="col-md-3">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuMHx0raMMaI3wh4CNt6kPRh95ZUzCyQM-HA&s" class="img-fluid rounded">
+        </div>
+        <div class="col-md-3">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReh_MoE270y5r1_vS7ZQhz5S3cDrnPjcW6gQ&s" class="img-fluid rounded">
+        </div>
+    </div>
+</div>
+    
+     <section class="py-5">
+         <div class="container">
+             <div class="newsletter-form text-center">
+                 <h3>Never Miss an Event</h3>
+                 <p>Subscribe to our newsletter for updates on the latest events</p>
+                 <div class="row justify-content-center">
+                     <div class="col-md-6">
+                         <div class="input-group">
+                             <input type="email" class="form-control" placeholder="Your email address">
+                             <button class="btn btn-primary">Subscribe</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>
+     
+     
+     <footer class="footer">
+         <div class="container">
+             <div class="row">
+                 <div class="col-md-4">
+                     <h5>About Eventora</h5>
+                     <p>Your ultimate destination for discoveri+
+                        ng and creating memorable events.</p>
+                 </div>
+                 <div class="col-md-4">
+                     <h5>Quick Links</h5>
+                     <ul class="list-unstyled">
+                         <li><a href="#" class="text-white">About Us</a></li>
+                         <li><a href="#" class="text-white">Contact</a></li>
+                         <li><a href="#" class="text-white">Terms & Conditions</a></li>
+                         <li><a href="#" class="text-white">Privacy Policy</a></li>
+                     </ul>
+                 </div>
+                 <div class="col-md-4">
+                     <h5>Connect With Us</h5>
+                     <div class="social-links">
+                         <a href="#"><i class="fab fa-facebook"></i></a>
+                         <a href="#"><i class="fab fa-twitter"></i></a>
+                         <a href="#"><i class="fab fa-instagram"></i></a>
+                         <a href="#"><i class="fab fa-linkedin"></i></a>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </footer>
+
+     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+         
+        function scrollLeft() {
+            const container = document.querySelector('.scroll-container');
+            container.scrollBy({
+                left: -320,
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollRight() {
+            const container = document.querySelector('.scroll-container');
+            container.scrollBy({
+                left: 320,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+     </script>
+     </body>
+     </html>

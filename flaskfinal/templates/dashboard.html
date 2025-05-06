@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title_block %}Dashboard{% endblock %}
+
+{% block main_block %}
+<style>
+    :root {
+        --bg-purple: #f0e6ff ;
+        --shadow-light: #ffffff;
+        --shadow-dark: #d9c6ff;
+        --pastel-purple: #d9c6ff ;
+        --pastel-blue: #b5d8eb;
+        --pastel-green: #cff6cf;
+        --pastel-pink:#ffc2f8;
+        --text-color: #6b5b95;
+    }
+
+    .dashboard-wrapper {
+        height: 100vh;
+        width: 100vw ;
+        background: var(--pastel-purple);
+        position: relative;
+        padding: 2rem 1rem;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: -2rem -7.5rem;
+        overflow: hidden; 
+        background-attachment: fixed
+    }
+
+    .dashboard-card {
+        background: var(--bg-purple);
+        border-radius: 20px;
+        box-shadow: 8px 8px 16px var(--shadow-dark),
+                   -8px -8px 16px var(--shadow-light);
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 1000px;
+    }
+
+    .welcome-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-text {
+        color: var(--text-color);
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .role-badge {
+        background: var(--pastel-purple);
+        color: var(--text-color);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        box-shadow: 3px 3px 6px var(--shadow-dark),
+                   -3px -3px 6px var(--shadow-light);
+    }
+
+    .btn {
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 5px 5px 10px var(--shadow-dark),
+                   -5px -5px 10px var(--shadow-light);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 7px 7px 14px var(--shadow-dark),
+                   -7px -7px 14px var(--shadow-light);
+    }
+
+    .btn-success {
+        background: var(--pastel-green);
+        color: var(--text-color);
+    }
+
+    .btn-info {
+        background: var(--pastel-blue);
+        color: var(--text-color);
+    }
+
+    .btn-warning {
+        background: var(--pastel-blue);
+        color: var(--text-color);
+    }
+
+    .btn-primary {
+        background: var(--pastel-purple);
+        color: var(--text-color);
+    }
+
+    .btn-danger {
+        background: var(--pastel-pink);
+        color: var(--text-color);
+    }
+
+    .action-section {
+        margin: 2rem 0;
+    }
+
+    .action-section h4 {
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    
+    html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-card">
+        <div class="welcome-section">
+            <h2 class="welcome-text">Welcome, {{ current_user.name }}! ✨</h2>
+            <p class="mb-4">Your role: <span class="role-badge">{{ current_user.role|title }}</span></p>
+        </div>
+        
+        {% if current_user.role == 'organizer' %}
+        <div class="action-section">
+            <h4>Organizer Tools</h4>
+            <div class="button-group">
+                <a href="{{ url_for('event_creation') }}" class="btn btn-success">Create New Event</a>
+                <a href="{{ url_for('manage_events') }}" class="btn btn-info">Manage Events</a>
+                <a href="#" class="btn btn-warning">View Attendees</a>
+            </div>
+        </div>
+        {% elif current_user.role == 'user' %}
+        <div class="action-section">
+            <h4>User Actions</h4>
+            <div class="button-group">
+                <a href="{{ url_for('browse') }}" class="btn btn-success">Browse Events</a>
+                <a href="{{ url_for('cart') }}" class="btn btn-info">My Registrations</a>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="action-section">
+            <div class="button-group">
+                <a href="{{ url_for('profile') }}" class="btn btn-primary">View Profile</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

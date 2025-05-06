@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Find Events
+  </title>
+  <style>
+   body {
+      background-color: rgb(253, 225, 225);
+      font-family: 'Arial', sans-serif;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      height: 10vh;
+      width: 100vw;
+      background-color:rgb(251, 165, 165); 
+      border-bottom: 2px solid #e0e4e9; 
+    }
+
+    h1 {
+      color: #134f88; 
+    }
+
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      width: 100%;
+      border: 10px solid #04414f;
+      background-color: #ded4d4;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: #032324;
+      outline: none;
+    }
+
+    .event-card {
+      background-color: #fbf3f3; 
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-card img {
+      border-radius: 8px;
+    }
+
+    .event-card h2 {
+      color: #031323; 
+    }
+
+    .event-card p {
+      color: #021424; 
+    }
+
+    .event-card .date, .event-card .location {
+      font-size: 0.9rem;
+    }
+
+    .event-card .date {
+      color: #8a9baf; 
+    }
+
+    .event-card .location {
+      color: #7e8c95; 
+    }
+
+    .event-card .ticket {
+      color: #5fa6b5;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .event-card .ticket:hover {
+      text-decoration: underline;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #4e5c66; 
+      margin-bottom: 16px;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const eventCards = document.querySelectorAll('.event-card');
+
+    searchInput.addEventListener('input', function () {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      eventCards.forEach(card => {
+        const title = card.querySelector('h2').textContent.toLowerCase();
+        const location = card.querySelector('.location').textContent.toLowerCase();
+        const date = card.querySelector('.date').textContent.toLowerCase();
+
+        if (title.includes(searchTerm) || location.includes(searchTerm) || date.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+  </script>
+ </head>
+ <body class="bg-pastel p-4">
+  <div class="header">
+   <h1 class="text-white text-2xl font-bold">
+    Event Manager
+   </h1>
+  </div>
+  <div class="max-w-4xl mx-auto">
+   <div class="mb-4">
+    <input class="w-full p-2 border rounded-lg" id="searchInput" placeholder="Search events..." type="text"/>
+   </div>
+   
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Music Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/T3EwtsQAPZdgPeaGlLJVnN6YTAmwgjXJ9YG-t72EUn4.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Mar 1 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore Marriott Hotel
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/wt9oL74XMfW9_RSXEiwDbRkRikRS44tCMTyYo_BjniQ.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Mar 21 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 3" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/F5xy_472XcuLvzBOkX0CfS0-2RPSttq6IyUMjQEfUFo.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Apr 10 • 9:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Bangalore International Exhibition Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/u0S-czSKre2qyKVlf15Kh4sRASwM10yddX2PqVSJUPk.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, May 15 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Mumbai Exhibition Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 5" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/VIJR9sbw4bgqCSdpVpZdwBNpHDNrB68oyrsitmpGWmk.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 5
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Jun 20 • 12:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Delhi Art Gallery
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 6" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/IiWnzkYtSMrePzYEuLmTWtIx_8Nyk_6nXdQR_vEuYZc.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 6
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Jul 5 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Chennai Trade Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Music Event 7" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/hR-gYhjRXFXceejIjGePjiokDd3it2a6YZcuUsFYxxI.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Music Event 7
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Aug 15 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Pune Convention Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Entertainment Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/PgDFX9T2hOPuuKf-mCQGmbJXWvt9QjxyJyBfhHIIeJc.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Mar 1 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore Marriott Hotel
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/5nxa84JhAS2L3z6-lNhe1hchiCsdRTPQWSIf514YRic.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Mar 21 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 3" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/ERUMvWUc5V-jWvTYm2HtEru3wemgdnq_fYd4jSjARBk.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Apr 10 • 9:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Bangalore International Exhibition Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/MBVVheicYv6_0hhPGfJSTLEQ-4C7G06MLll5Lb336n0.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, May 15 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Mumbai Exhibition Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 5" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/kY17HQU03BmdR8m9Ye667SiPGuJYOul0T9FgPicej28.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 5
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Jun 20 • 12:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Delhi Art Gallery
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 6" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/FihDxJSS_ZJmw_-JpNoTxKfzdZ9xds8fTWKCXShsVtM.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 6
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Jul 5 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Chennai Trade Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 7" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/1NE4E2OXexPX39QbLDbl4XDt_JDYzbb4X3Fr_yplMFQ.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 7
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Aug 15 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Pune Convention Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Entertainment Event 8" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/cmQ5yA1d8212mwEbkH5RDh6AN_lwdqpN93yNygODplo.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Entertainment Event 8
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Sep 10 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Hyderabad Convention Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Business Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     <!-- Event 1 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Business Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/lG-YCqubnmDV5SKtDtepZI91sR_8W7LY-dy0KwwHQbE.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Business Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Mar 1 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore Marriott Hotel
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Event 2 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Business Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/8vxjcrI70ea2qvcUzr6_8hjzMrlz_D0r8LUEoD3MwS8.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Business Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Mar 21 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Indore
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Business Event 3" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/0XEB3UdShW56qFLyNGw9SL2ZiggzbBtcSeue76VcQ-E.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Business Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Apr 10 • 9:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Bangalore International Exhibition Centre
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Event 4 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Business Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/hKXhzJ_V38T41R37szhq-_GmHnto45wDNRFt2WEu68g.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Business Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, May 15 •
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Festival Events -->
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Festival Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     <!-- Festival Event 1 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/T3EwtsQAPZdgPeaGlLJVnN6YTAmwgjXJ9YG-t72EUn4.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Oct 1 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         City Park
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 2 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Holi_Festival_of_Colors_Utah%2C_United_States_2013.jpg/640px-Holi_Festival_of_Colors_Utah%2C_United_States_2013.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Oct 2 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Downtown Square
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 3 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 3" class="w-24 h-24 rounded-lg mr-4 " height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhyNT6u6BmmOULpWMnL8fvA-twmsf-vEdqgQ&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Oct 3 • 12:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Riverside Park
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 4 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU4tgBgiNIRoKglYXjd7i9cOSDSgrL-9iUqA&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Oct 4 • 1:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Central Plaza
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 5 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 5" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUo2pa0PDI3JOV5zcuFmEpEGUH5UBtzsNS2Q&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 5
+        </h2>
+        <p class="text-gray-600 date">
+         Tue, Oct 5 • 2:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         City Stadium
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 6 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 6" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxDGwASi4SqTF5-29qeAjtjlztq872Xw94RQ&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 6
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, Oct 6 • 3:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Ocean View
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 7 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 7" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://storage.googleapis.com/a1aa/image/T3EwtsQAPZdgPeaGlLJVnN6YTAmwgjXJ9YG-t72EUn4.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 7
+        </h2>
+        <p class="text-gray-600 date">
+         Thu, Oct 7 • 4:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Mountain Top
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Festival Event 8 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Festival Event 8" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Holi_Festival_of_Colors_Utah%2C_United_States_2013.jpg/640px-Holi_Festival_of_Colors_Utah%2C_United_States_2013.jpg" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Festival Event 8
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Oct 8 • 5:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Fairgrounds
+        </p>
+        <p class="text -blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Retail Events -->
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Retail Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     <!-- Retail Event 1 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUArx7aOzz9jLF1qZtSJmvT0JICo8-9-7P5w&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Nov 1 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Main Street Mall
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 2 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ2IKrH6ggiWJPYRpdQmYDdVCVfaoG3jw39Q&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Nov 2 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         City Center
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 3 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 3" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmpXobiGy9KcyoT9DcVzRp9qwn5Du48VqltQ&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Nov 3 • 12:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Downtown Plaza
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 4 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdvPDwvOcTztEs5WuZeYK0-zAvF17Akpf_CA&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Tue, Nov 4 • 1:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Shopping District
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 5 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 5" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZAM64fmvN5Wgu45xf-477CFf_vArq7NwFqg&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 5
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, Nov 5 • 2:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Market Square
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 6 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 6" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUArx7aOzz9jLF1qZtSJmvT0JICo8-9-7P5w&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 6
+        </h2>
+        <p class="text-gray-600 date">
+         Thu, Nov 6 • 3:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         City Plaza
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 7 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 7" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxacrD_oCI-zqGJiwlgtgdklQXDbfys3EePQ&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 7
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Nov 7 • 4:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Central Market
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Retail Event 8 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Retail Event 8" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZtkbtWO2PTu4MuWP_joPIsGMMyKfXKCoeHQ&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Retail Event 8
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Nov 8 • 5:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Grand Mall
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+
+   <!-- Online Events -->
+   <h2 class="text-xl font-bold text-gray-800 mb-2">
+    Online Events
+   </h2>
+   <div class="overflow-x-auto mb-6">
+    <div class="flex space-x-4">
+     <!-- Online Event 1 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 1" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRmSZWZgQ9EIzwvqdxFt22wHeEJuocxNod6w&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 1
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Dec 1 • 10:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Virtual Platform
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 2 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 2" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb0h-QISmExxxGTLasjE-H8-v3TLMG2iYZOw&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 2
+        </h2>
+        <p class="text-gray-600 date">
+         Tue, Dec 2 • 11:00 AM
+        </p>
+        <p class="text-gray-600 location">
+         Zoom Meeting
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 3 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+ <img alt="Online Event 3" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9iEFxGvQrwJuUxzhpWyHnmQ_lK_I9fN2bIw&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 3
+        </h2>
+        <p class="text-gray-600 date">
+         Wed, Dec 3 • 12:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Webinar Platform
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 4 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 4" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkaCmGhv20cTGBZM90cYuEn7hg7MAuAON4Ig&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 4
+        </h2>
+        <p class="text-gray-600 date">
+         Thu, Dec 4 • 1:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Online Conference
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 5 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 5" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSucq46Wrba5wwD02QW_AqhnVGsQKhGKFvjhw&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 5
+        </h2>
+        <p class="text-gray-600 date">
+         Fri, Dec 5 • 2:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Virtual Workshop
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 6 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 6" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD8QP9bbWvUytD-pKpfHbHq1AP348T2tmOeA&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 6
+        </h2>
+        <p class="text-gray-600 date">
+         Sat, Dec 6 • 3:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Live Stream
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 7 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 7" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkaCmGhv20cTGBZM90cYuEn7hg7MAuAON4Ig&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 7
+        </h2>
+        <p class="text-gray-600 date">
+         Sun, Dec 7 • 4:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Online Seminar
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 8 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 8" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRmSZWZgQ9EIzwvqdxFt22wHeEJuocxNod6w&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 8
+        </h2>
+        <p class="text-gray-600 date">
+         Mon, Dec 8 • 5:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Online Workshop
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+     <!-- Online Event 9 -->
+     <div class="border rounded-lg shadow-lg p-4 min-w-[300px] event-card">
+      <div class="flex">
+       <img alt="Online Event 9" class="w-24 h-24 rounded-lg mr-4" height="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIwwwtr7wPEA0TXFnetJFwy4JZiaZfp1QYEg&s" width="100"/>
+       <div>
+        <h2 class="text-lg font-bold">
+         Online Event 9
+        </h2>
+        <p class="text-gray-600 date">
+         Tue, Dec 9 • 6:00 PM
+        </p>
+        <p class="text-gray-600 location">
+         Virtual Meetup
+        </p>
+        <p class="text-blue-600">
+         Check ticket price on event
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

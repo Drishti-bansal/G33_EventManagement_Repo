@@ -1,0 +1,968 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fbff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .booking-section {
+            padding: 60px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .booking-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .booking-title span {
+            color: #e63946;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .booking-subtitle {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .booking-subtitle .highlight {
+            color: #e63946;
+        }
+
+        .booking-container {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .booking-images {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: popOut 0.6s ease-out forwards;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-container:nth-child(1) { animation-delay: 0.2s; }
+        .image-container:nth-child(2) { animation-delay: 0.4s; }
+        .image-container:nth-child(3) { animation-delay: 0.6s; }
+        .image-container:nth-child(4) { animation-delay: 0.8s; }
+
+        .image-tall {
+            grid-row: span 2;
+        }
+
+        @keyframes popOut {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .booking-form {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 0;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .form-group input,
+        .form-group select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        /* Style for read-only fields */
+        .form-group input[readonly] {
+            background-color: #f2f2f2;
+            cursor: not-allowed;
+            border: 1px solid #ccc;
+        }
+
+        /* User info note styles */
+        .user-info-note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e63946;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .btn-book {
+            width: 100%;
+            padding: 15px;
+            background-color: #e63946;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-book:hover {
+            background-color: #d62939;
+            transform: translateY(-2px);
+        }
+        
+        .btn-book:active {
+            transform: translateY(0);
+        }
+        
+        .seating-section {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.8s ease-out forwards 1s;
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .seating-image {
+            width: 50%;
+            height: 700px;
+            max-width: 2000px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-left: 0%;
+        }
+        
+        .seating-image img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .seating-image:hover img {
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 992px) {
+            .booking-container {
+                flex-direction: column;
+            }
+            
+            .booking-images, .booking-form {
+                width: 100%;
+            }
+            
+            .booking-images {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .form-group input,
+            .form-group select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <section class="booking-section">
+            <div class="section-header">
+                <h3 class="booking-title"><span>EVENT BOOKING</span></h3>
+                <h2 class="booking-subtitle">Book Your <span class="highlight">TICKETS NOW</span></h2>
+            </div>
+            
+            <div class="booking-container">
+                <div class="booking-images">
+                    <div class="image-container image-tall">
+                        <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29uY2VydHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80" alt="Concert Event">
+                    </div>
+                    <div class="image-container">
+                        <img src="https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_640.jpg" alt="Business Conference">
+                    </div>
+                    <div class="image-container">
+                        <img src="" >
+                    </div>
+                </div>
+                
+                <div class="booking-form">
+                    <div class="user-info-note">
+                        Your personal information is automatically filled from your account details.
+                    </div>
+                    
+                    <form action="{% url 'process_booking' event.id %}" method="POST" id="booking-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" name="name" id="yourName" value="{{ initial_data.name }}" readonly>
+                            <input type="email" placeholder="Your Email" name="user_email" id="YourEmail" value="{{ initial_data.user_email }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" placeholder="Phone Number" name="user_phone" id="yourPhone" value="{{ initial_data.user_phone }}" readonly>
+                            <input type="number" placeholder="Number of Attendees" name="user_attendees" id="yourAttendees" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Column" name="user_column" id="yourColumn" required>
+                            <input type="text" placeholder="Seat Number" name="user_seat" id="yourSeat" required>
+                        </div>
+                        
+                        <div class="form-group" style="display: none;">
+                            <input type="hidden" name="price" value="{{ request.GET.price }}">
+                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                        </div>
+                        
+                        <textarea placeholder="Special Requests" name="user_request" id="yourRequest"></textarea>
+                        
+                        <button type="submit" class="btn-book">Book Now</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="seating-section">
+                <div class="seating-image">
+                    <img src="https://chinochildrenstheatre.org/wp-content/uploads/2023/02/Seventh-Street-Theatre-Seating-Chart_v2.jpeg?w=640" alt="Event Seating Layout">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const flashMessage = document.querySelector(".flash-message");
+            if (flashMessage) {
+                flashMessage.style.display = "block";
+                setTimeout(() => {
+                    flashMessage.style.opacity = "0";
+                    flashMessage.style.transition = "opacity 0.5s ease";
+                    setTimeout(() => flashMessage.style.display = "none", 500);
+                }, 4000);
+            }
+        };
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fbff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .booking-section {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .booking-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .booking-title span {
+            color: #e63946;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .booking-subtitle {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .booking-subtitle .highlight {
+            color: #e63946;
+        }
+
+        /* New side-by-side layout */
+        .booking-container {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .booking-form-container {
+            flex: 1;
+            min-width: 400px;
+        }
+
+        .seating-chart-container {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .booking-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .form-group input,
+        .form-group select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        /* Style for read-only fields */
+        .form-group input[readonly] {
+            background-color: #f2f2f2;
+            cursor: not-allowed;
+            border: 1px solid #ccc;
+        }
+
+        /* User info note styles */
+        .user-info-note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e63946;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .btn-book {
+            width: 100%;
+            padding: 15px;
+            background-color: #e63946;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-book:hover {
+            background-color: #d62939;
+            transform: translateY(-2px);
+        }
+        
+        .btn-book:active {
+            transform: translateY(0);
+        }
+        
+        /* Seating chart styles */
+        .seating-instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e63946;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .seating-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border-radius: 4px;
+        }
+        
+        .available { background-color: #6CB4EE; }
+        .selected { background-color: #4CAF50; }
+        .booked { background-color: #aaa; }
+        
+        .seat {
+            width: 30px;
+            height: 30px;
+            margin: 4px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            transition: all 0.2s ease;
+        }
+        
+        .seat.available {
+            background-color: #6CB4EE;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        
+        .seat.selected {
+            background-color: #4CAF50;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .seat.booked {
+            background-color: #aaa;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            margin: 5px 0;
+        }
+        
+        .row-label {
+            width: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stage {
+            height: 50px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+
+        .selection-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .selection-info h3 {
+            color: #e63946;
+            margin-bottom: 10px;
+        }
+        
+        .selected-seats {
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: #e63946;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .seating-chart-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        #seatingChart {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .booking-container {
+                flex-direction: column;
+            }
+            
+            .booking-form-container, .seating-chart-container {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .form-group input,
+            .form-group select {
+                width: 100%;
+            }
+            
+            .seat {
+                width: 25px;
+                height: 25px;
+                margin: 3px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <section class="booking-section">
+            <div class="section-header">
+                <h3 class="booking-title"><span>EVENT BOOKING</span></h3>
+                <h2 class="booking-subtitle">Book Your <span class="highlight">TICKETS NOW</span></h2>
+            </div>
+            
+            <div class="booking-container">
+                <!-- Left side: Booking Form -->
+                <div class="booking-form-container">
+                    <div class="booking-form">
+                        <!-- User information note -->
+                        <div class="user-info-note">
+                            Your personal information is automatically filled from your account details.
+                        </div>
+                        
+                        <form action="{% url 'process_booking' event.id %}" method="POST" id="booking-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <!-- Read-only fields for user information -->
+                                <input type="text" placeholder="Your Name" name="name" id="yourName" value="{{ initial_data.name }}" readonly>
+                                <input type="email" placeholder="Your Email" name="user_email" id="YourEmail" value="{{ initial_data.user_email }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <!-- Read-only field for phone number -->
+                                <input type="tel" placeholder="Phone Number" name="user_phone" id="yourPhone" value="{{ initial_data.user_phone }}" readonly>
+                                <!-- User can edit number of attendees -->
+                                <input type="number" placeholder="Number of Attendees" name="user_attendees" id="yourAttendees" required min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <!-- Hidden fields for seat information -->
+                                <input type="hidden" name="user_column" id="yourColumn" required>
+                                <input type="hidden" name="user_seat" id="yourSeat" required>
+                            </div>
+                            
+                            <div class="selection-info">
+                                <h3>Your Selected Seats:</h3>
+                                <p class="selected-seats" id="displaySelectedSeats">None selected</p>
+                                <p id="seatSelectionError" class="error-message"></p>
+                            </div>
+                            
+                            <div class="form-group" style="display: none;">
+                                <input type="hidden" name="price" value="{{ request.GET.price }}">
+                                <input type="hidden" name="event_id" value="{{ event.id }}">
+                            </div>
+                            
+                            <textarea placeholder="Special Requests" name="user_request" id="yourRequest"></textarea>
+                            
+                            <button type="submit" class="btn-book" id="bookButton">Book Now</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Right side: Seating Chart -->
+                <div class="seating-chart-container">
+                    <div class="seating-chart-wrapper">
+                        <div class="seating-instructions">
+                            <p><strong>Instructions:</strong> First enter the number of attendees, then select your seats by clicking on the available (blue) seats below. The number of seats selected must match the number of attendees.</p>
+                        </div>
+                        
+                        <div class="seating-controls">
+                            <div class="legend">
+                                <div class="legend-item">
+                                    <div class="legend-color available"></div>
+                                    <span>Available</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color selected"></div>
+                                    <span>Selected</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color booked"></div>
+                                    <span>Booked</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stage">STAGE</div>
+                        
+                        <div id="seatingChart">
+                            <!-- Seating chart will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Flash message handling
+        window.onload = function () {
+            const flashMessage = document.querySelector(".flash-message");
+            if (flashMessage) {
+                flashMessage.style.display = "block";
+                setTimeout(() => {
+                    flashMessage.style.opacity = "0";
+                    flashMessage.style.transition = "opacity 0.5s ease";
+                    setTimeout(() => flashMessage.style.display = "none", 500);
+                }, 4000);
+            }
+            
+            // Initialize seating chart
+            generateSeatingChart();
+            
+            // Set up event listeners
+            document.getElementById('yourAttendees').addEventListener('change', validateSeatSelection);
+            document.getElementById('booking-form').addEventListener('submit', validateForm);
+        };
+        
+        // Global variables to track seats
+        let selectedSeats = [];
+        const bookedSeats = [
+            "A3", "A4", "B5", "B6", "C2", "C7", "D4", "E1", "E8", "F3", "F6"
+        ]; // Example of already booked seats
+        
+        // Create the seating chart
+        function generateSeatingChart() {
+            const seatingChart = document.getElementById('seatingChart');
+            const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+            const seatsPerRow = 10;
+            
+            rows.forEach(row => {
+                const seatRow = document.createElement('div');
+                seatRow.className = 'seat-row';
+                
+                // Add row label
+                const rowLabel = document.createElement('div');
+                rowLabel.className = 'row-label';
+                rowLabel.textContent = row;
+                seatRow.appendChild(rowLabel);
+                
+                // Add seats
+                for (let i = 1; i <= seatsPerRow; i++) {
+                    const seat = document.createElement('div');
+                    const seatId = `${row}${i}`;
+                    
+                    seat.className = bookedSeats.includes(seatId) ? 'seat booked' : 'seat available';
+                    seat.textContent = i;
+                    seat.dataset.id = seatId;
+                    
+                    if (!bookedSeats.includes(seatId)) {
+                        seat.addEventListener('click', () => toggleSeatSelection(seat));
+                    }
+                    
+                    seatRow.appendChild(seat);
+                }
+                
+                seatingChart.appendChild(seatRow);
+            });
+        }
+        
+        // Handle seat selection
+        function toggleSeatSelection(seat) {
+            const seatId = seat.dataset.id;
+            const maxAttendees = parseInt(document.getElementById('yourAttendees').value);
+            
+            if (seat.classList.contains('selected')) {
+                // Deselect seat
+                seat.classList.remove('selected');
+                seat.classList.add('available');
+                selectedSeats = selectedSeats.filter(id => id !== seatId);
+            } else {
+                // Select seat if not exceeding max attendees
+                if (selectedSeats.length < maxAttendees) {
+                    seat.classList.remove('available');
+                    seat.classList.add('selected');
+                    selectedSeats.push(seatId);
+                } else {
+                    // Show error if trying to select more seats than attendees
+                    document.getElementById('seatSelectionError').textContent = 
+                        `You can only select ${maxAttendees} seat(s) based on your attendee count.`;
+                    setTimeout(() => {
+                        document.getElementById('seatSelectionError').textContent = '';
+                    }, 3000);
+                    return;
+                }
+            }
+            
+            updateFormWithSelectedSeats();
+            validateSeatSelection();
+        }
+        
+        // Update form fields with selected seats
+        function updateFormWithSelectedSeats() {
+            // Sort seats for consistent display
+            selectedSeats.sort();
+            
+            // Extract columns (letters) and seat numbers
+            const columns = selectedSeats.map(seat => seat.charAt(0)).join(',');
+            const seatNumbers = selectedSeats.map(seat => seat.substring(1)).join(',');
+            
+            // Update form fields
+            document.getElementById('yourColumn').value = columns;
+            document.getElementById('yourSeat').value = seatNumbers;
+            
+            // Update display
+            document.getElementById('displaySelectedSeats').textContent = 
+                selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None selected';
+        }
+        
+        // Validate seat selection based on attendee count
+        function validateSeatSelection() {
+            const attendees = parseInt(document.getElementById('yourAttendees').value);
+            const errorElement = document.getElementById('seatSelectionError');
+            
+            if (selectedSeats.length > attendees) {
+                // If we have too many seats selected, remove the excess
+                const excessSeats = selectedSeats.length - attendees;
+                for (let i = 0; i < excessSeats; i++) {
+                    const seatId = selectedSeats.pop();
+                    const seatElement = document.querySelector(`.seat[data-id="${seatId}"]`);
+                    if (seatElement) {
+                        seatElement.classList.remove('selected');
+                        seatElement.classList.add('available');
+                    }
+                }
+                updateFormWithSelectedSeats();
+                errorElement.textContent = `Attendee count reduced. Removed excess seat selections.`;
+                setTimeout(() => { errorElement.textContent = ''; }, 3000);
+            }
+            
+            if (selectedSeats.length < attendees) {
+                errorElement.textContent = `Please select ${attendees - selectedSeats.length} more seat(s).`;
+                return false;
+            } else if (selectedSeats.length > attendees) {
+                errorElement.textContent = `Please deselect ${selectedSeats.length - attendees} seat(s).`;
+                return false;
+            } else {
+                errorElement.textContent = '';
+                return true;
+            }
+        }
+        
+        // Validate form before submission
+        function validateForm(event) {
+            if (!validateSeatSelection()) {
+                event.preventDefault();
+                document.getElementById('seatSelectionError').textContent += " Please adjust your selection before booking.";
+            }
+        }
+    </script>
+</body>
+</html>

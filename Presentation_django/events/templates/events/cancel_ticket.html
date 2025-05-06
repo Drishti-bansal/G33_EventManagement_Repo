@@ -1,0 +1,44 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Cancel Ticket{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">Cancel Ticket</h5>
+                </div>
+                <div class="card-body">
+                    <h5>Are you sure you want to cancel your ticket for:</h5>
+                    <div class="my-4">
+                        <h4>{{ booking.event.title }}</h4>
+                        <p><strong>Date & Time:</strong> {{ booking.event.date|date:"F j, Y, g:i a" }}</p>
+                        <p><strong>Location:</strong> {{ booking.event.location }}</p>
+                        <p><strong>Attendees:</strong> {{ booking.user_attendees }}</p>
+                        <p><strong>Seat:</strong> Column {{ booking.user_column }}, Seat {{ booking.user_seat }}</p>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Cancellation Policy:</strong></p>
+                        <ul>
+                            <li>Tickets can only be cancelled at least 1 day before the event.</li>
+                            <li>A full refund will be processed to your original payment method.</li>
+                            <li>Refunds typically take 7-10 business days to appear in your account.</li>
+                        </ul>
+                    </div>
+                    
+                    <form method="post" action="{% url 'cancel_ticket' booking.id %}">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{% url 'my_tickets' %}" class="btn btn-secondary me-2">Go Back</a>
+                            <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

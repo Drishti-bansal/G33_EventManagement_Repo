@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title_block %}Profile{% endblock %}
+
+{% block main_block %}
+<div class="card mt-4" style="background-color: #ff8fab;;">
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4">Profile Details</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mb-4" style="background-color: white;">
+                    <div class="card-body">
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label fw-bold">Name:</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-plaintext">{{ current_user.name }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label fw-bold">Email:</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-plaintext">{{ current_user.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label fw-bold">Mobile:</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-plaintext">{{ current_user.mobile }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label fw-bold">Role:</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-primary">{{ current_user.role|title }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

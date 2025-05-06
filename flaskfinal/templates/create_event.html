@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Events</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            position: static;
+            margin: 0;
+            padding: 0;
+            background-color: RGB(204, 153, 255) ;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            height: 10vh;
+            width: 100vw;
+            background-color: rgb(204, 165, 244) ;
+        }
+        
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            height: 72vh; 
+            width: 100vw;
+        }
+
+        img {
+            height: 70vh;
+            width: 60%;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            flex-direction: column;
+        }
+
+        .flex-container img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 14px;
+            }
+
+            img {
+                width: 80%;
+                height: auto;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .image-container img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .flex-container img {
+                width: 90%;
+                height: 180px;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header">
+        <h1 style="text-align: left;">Eventora</h1>
+
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-calendar-alt"></i> 
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        
+                        <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('home') }}">Home</a></li>  
+                        <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('find_events') }}">Find Events</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-light text-dark" href="{{ url_for('help') }}">Help Center</a></li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+       
+    </div>
+
+    <div style="background-color: rgb(227, 199, 252) ;">
+        <div class="image-container">
+            <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXZlbnR8ZW58MHx8MHx8fDA%3D" alt="">
+        </div>
+        <h2 style="font-weight: bold; font-size: 60px; text-align: center;">Empowering event creators to succeed</h2>
+        <h2 style="text-align: center;">The complete platform for ticketing and event discovery, trusted by event creators and attendees globally</h2>
+        <br>
+    </div>
+</header>
+
+<main style="background-color: rgb(232, 217, 248) ;">
+    <div class="container py-5">
+        <h2 class="section-title" style="font-size: 30px;">OPTIMIZE YOUR EVENTS</h2>
+        <p class="section-description">Efficient solutions designed to streamline event planning and execution</p>
+        <br>
+        <h1 style="font-size: 50px;">Event Categories</h1>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/music-events" class="flex-container">
+                    <img alt="A band performing on stage with musical instruments" src="https://storage.googleapis.com/a1aa/image/7inNSvPIAWtJd8Qy5D6XqZf17sOQCW2NIRVFUcIYyuQ.jpg" />
+                    <h2>Music Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/corporate-events" class="flex-container">
+                    <img alt="People networking at a corporate event" src="https://storage.googleapis.com/a1aa/image/2oHAlDCBIPN4YobavES9TmAut8yML6JhLm4NY-pNkZs.jpg" />
+                    <h2>Corporate Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/online-events" class="flex-container">
+                    <img alt="Person taking a photo with a smartphone at an online event" src="https://storage.googleapis.com/a1aa/image/Tda2fPCS2YQOVxtpaBr0k7TO0UMtvUTsvZsP3jwokmw.jpg" />
+                    <h2>Online Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/food-beverage-events" class="flex-container">
+                    <img alt="Person enjoying food and beverage at an event" src="https://storage.googleapis.com/a1aa/image/nYL6qX0W6K86d59gXtyS6ttsIos2-yYQp6hA6xV-LVg.jpg" />
+                    <h2>Food & Beverage Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/performing-arts-events" class="flex-container">
+                    <img alt="Performer in costume at a performing arts event" src="https://storage.googleapis.com/a1aa/image/mDKJ11-1GpXU396MxXXMmGIbt6r2-iu6V8aUOqzfSkI.jpg" />
+                    <h2>Performing Arts Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/classes-workshops-events" class="flex-container">
+                    <img alt="Person demonstrating a skill at a workshop" src="https://storage.googleapis.com/a1aa/image/D5NZdoKJmDX2wSkxO-MXll7941hN98SUil2G4y959y4.jpg" />
+                    <h2>Classes & Workshops Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/retail-events" class="flex-container">
+                    <img alt="Person selling items at a retail event" src="https://storage.googleapis.com/a1aa/image/L9d5H7kL8Vu4geDAWwBXGbfddaygG-tewrsb7Rf6Tl8.jpg" />
+                    <h2>Retail Events</h2>
+                </a>
+            </div>
+    
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/nonprofit-events" class="flex-container">
+                    <img alt="Volunteers working at a nonprofit event" src="https://storage.googleapis.com/a1aa/image/AjsbCBx8keiYw-6z6dWi9pAd6583CPAXybtWoCX6u_s.jpg" />
+                    <h2>Nonprofit Events</h2>
+                </a>
+            </div>
+    
+            
+            <div class="col-12 col-md-4 mb-4">
+                <a href="https://example.com/festivals-fairs-events" class="flex-container">
+                    <img alt="People attending a festival or fair" src="https://storage.googleapis.com/a1aa/image/6VFosSIWgvJ41Z4UZqJkaeO-H72utejio79wFBDuhf0.jpg" />
+                    <h2>Festivals & Fairs Events</h2>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<br><br>
+<footer>
+    <div class="d-flex justify-content-center align-items-center">
+
+        <a href="{{ url_for('login', role='organizer') }}">
+            <button class="btn btn-primary btn-lg">Get Started</button>
+        </a>
+    </div>
+</footer>
+
+</body>
+</html>

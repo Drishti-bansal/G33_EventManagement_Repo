@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Event - {{ event.title }}</title>
+    <style>
+        .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+body{
+    background-color: #fcdede;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ebdddd;
+    border-radius: 4px;
+}
+
+.submit-btn, .view-btn, .back-btn {
+    background-color: #4CAF50;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.event_title{
+    text-align: center;
+}
+
+
+
+.submit-btn:hover, .view-btn:hover, .back-btn:hover {
+    background-color: #45a049;
+}
+
+.success-container {
+    text-align: center;
+    padding: 40px;
+}
+
+.event-container {
+    background-color: #fbf7f7;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.event-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+
+.event-details {
+    margin: 20px 0;
+}
+
+.description {
+    white-space: pre-line;
+}
+
+#image-preview {
+    margin-top: 10px;
+}
+
+#image-preview img {
+    max-width: 300px;
+    max-height: 200px;
+}
+    </style>
+</head>
+<body>
+    <div class="container event-container">
+        <h1 class="event_title">{{ event.title }}</h1>
+        <div class="event-image">
+            <img src="{{ url_for('static', filename=event.image_path) }} "  alt="Event poster">
+        </div>
+        <div class="event-details">
+            <p><strong>Category:</strong> {{ event.category }}</p>
+            <p><strong>Date:</strong> {{ event.date.strftime('%B %d, %Y') }}</p>
+            <p><strong>Time:</strong> {{ event.time }}</p>
+            <p><strong>Description:</strong></p>
+            <p class="description">{{ event.description }}</p>
+        </div>
+        <a href="{{ url_for('event_creation_page') }}" class="back-btn">Create Another Event</a>
+    </div>
+</body>
+</html>

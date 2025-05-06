@@ -1,0 +1,440 @@
+{% extends 'events/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <section class="cart-section">
+        <div class="section-header">
+            <h1 class="cart-title">Your Shopping Cart</h1>
+            <p class="cart-subtitle">Review your selected events before checkout</p>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if cart_items %}
+        <div class="cart-container">
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        {% if item.event.image %}
+                        <img src="{{ item.event.image.url }}" alt="{{ item.event.title }}">
+                        {% else %}
+                        <div class="no-image">No Image</div>
+                        {% endif %}
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="item-title">{{ item.event.title }}</h3>
+                        <p class="item-date">{{ item.event.date }}</p>
+                        <p class="item-location">{{ item.event.location }}</p>
+                        <p class="item-price">₹{{ item.event.price }} per ticket</p>
+                    </div>
+                    <div class="cart-item-actions">
+                        <form action="{% url 'update_cart_item' item.id %}" method="POST" class="update-quantity-form">
+                            {% csrf_token %}
+                            <div class="quantity-control">
+                                <label for="attendees-{{ item.id }}">Attendees:</label>
+                                <div class="quantity-wrapper">
+                                    <button type="button" class="quantity-btn minus" onclick="decrementQuantity('attendees-{{ item.id }}')">-</button>
+                                    <input type="number" id="attendees-{{ item.id }}" name="attendees" value="{{ item.attendees }}" min="1" class="quantity-input">
+                                    <button type="button" class="quantity-btn plus" onclick="incrementQuantity('attendees-{{ item.id }}')">+</button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-update">Update</button>
+                        </form>
+                        <form action="{% url 'remove_from_cart' item.id %}" method="POST" class="remove-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-remove">Remove</button>
+                        </form>
+                        <div class="item-subtotal">
+                            <p>Subtotal: <span class="price">₹{{ item.get_price }}</span></p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart-summary">
+                <h3 class="summary-title">Order Summary</h3>
+                <div class="summary-row">
+                    <span>Items:</span>
+                    <span>{{ cart.get_item_count }}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span class="total-amount">₹{{ total_price }}</span>
+                </div>
+                <div class="summary-actions">
+                    <a href="{% url 'event_list' %}" class="btn btn-secondary">Continue Shopping</a>
+                    <a href="{% url 'cart_checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <img src="{% static 'images/empty-cart.svg' %}" alt="Empty Cart" class="empty-cart-icon">
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any events to your cart yet.</p>
+            <a href="{% url 'event_list' %}" class="btn btn-primary">Browse Events</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<style>
+    .cart-section {
+        padding: 40px 0;
+    }
+    
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .cart-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .cart-subtitle {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .cart-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+    
+    .cart-items {
+        flex: 1 1 60%;
+    }
+    
+    .cart-summary {
+        flex: 1 1 30%;
+        min-width: 300px;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        align-self: flex-start;
+        position: sticky;
+        top: 20px;
+    }
+    
+    .cart-item {
+        display: flex;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+    
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .no-image {
+        width: 100%;
+        height: 100%;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+    }
+    
+    .cart-item-details {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .item-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .item-date, .item-location, .item-price {
+        margin-bottom: 5px;
+        color: #666;
+    }
+    
+    .cart-item-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .update-quantity-form {
+        display: flex;
+        align-items: center;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+    }
+    
+    .quantity-wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+    
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 50%;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .quantity-btn:hover {
+        background-color: #e0e0e0;
+    }
+    
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin: 0 10px;
+        padding: 5px;
+    }
+    
+    .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .btn-primary {
+        background-color: #e63946;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background-color: #d62939;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+    }
+    
+    .btn-update {
+        background-color: #4285F4;
+        color: white;
+    }
+    
+    .btn-update:hover {
+        background-color: #3367d6;
+    }
+    
+    .btn-remove {
+        background-color: #f0f0f0;
+        color: #666;
+    }
+    
+    .btn-remove:hover {
+        background-color: #e0e0e0;
+    }
+    
+    .item-subtotal {
+        margin-left: auto;
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    .summary-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+    
+    .summary-row.total {
+        font-size: 22px;
+        font-weight: 700;
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+    }
+    
+    .total-amount {
+        color: #e63946;
+    }
+    
+    .summary-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .summary-actions .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    
+    .empty-cart-icon {
+        width: 120px;
+        margin-bottom: 20px;
+    }
+    
+    .empty-cart h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    
+    .empty-cart p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 30px;
+    }
+    
+    .messages {
+        margin-bottom: 30px;
+    }
+    
+    .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .alert-error, .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    @media (max-width: 992px) {
+        .cart-container {
+            flex-direction: column;
+        }
+        
+        .cart-summary {
+            width: 100%;
+            position: static;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .cart-item {
+            flex-direction: column;
+        }
+        
+        .cart-item-image {
+            width: 100%;
+            height: 200px;
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+        
+        .cart-item-actions {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .item-subtotal {
+            margin-left: 0;
+            margin-top: 10px;
+            width: 100%;
+            text-align: right;
+        }
+    }
+</style>
+
+<script>
+    function incrementQuantity(id) {
+        const input = document.getElementById(id);
+        input.value = parseInt(input.value) + 1;
+    }
+    
+    function decrementQuantity(id) {
+        const input = document.getElementById(id);
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+</script>
+{% endblock %}
